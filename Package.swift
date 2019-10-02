@@ -21,7 +21,7 @@ let package = Package(
         .package(url: "http://srv-git:3000/qmobile/QMobileDataSync.git" , .revision("HEAD")),
         .package(url: "https://github.com/drmohundro/SWXMLHash.git", .revision("5.0.1")),
         .package(url: "https://github.com/phimage/MomXML.git", .revision("HEAD")),
-        .package(url: "https://github.com/phimage/Prephirences.git", .revision("HEAD")),
+        .package(url: "https://github.com/phimage/Prephirences.git", .revision("5.1.0")),
         .package(url: "https://github.com/DaveWoodCom/XCGLogger.git", .revision("7.0.0")),
         .package(url: "https://github.com/Carthage/Commandant.git", .upToNextMinor(from: "0.17.0"))
     ],
