@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/phimage/MomXML.git",
         "state": {
           "branch": "HEAD",
-          "revision": "a89f1ff9383584fecc7ed8aa07a3a2a0a1cad169",
+          "revision": "7ad04467823a0d53805021ec09f00642c6c575ad",
           "version": null
         }
       },
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/phimage/Prephirences.git",
         "state": {
           "branch": "HEAD",
-          "revision": "2ddd058050b22dc64f4b88a137aabb31fa3cc552",
+          "revision": "81b4792293972ec7541a941333e584ccc7976198",
           "version": null
         }
       },
