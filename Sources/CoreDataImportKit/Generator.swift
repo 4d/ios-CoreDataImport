@@ -63,8 +63,15 @@ class Generator {
             self.shouldExit = true
         }
         logger.info("Waiting for data store...")
-        while !shouldExit && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 2))) {
+        while !shouldExit && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
             // do nothing
+        }
+        // Add sometimes for disk flush?
+        // TODO: find a better way to wait for disk flush
+        logger.debug("Wait disk flush...")
+        var cpt = 0
+        while cpt < 2 && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
+            cpt+=1
         }
     }
 
