@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G87" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ALL_TYPES" representedClassName="ALL_TYPES" syncable="YES" codeGenerationType="class">
+        <attribute name="alphaField" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="keyMapping" value="Alpha field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="booleanField" optional="YES" attributeType="Boolean" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="Boolean field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="dateField" optional="YES" attributeType="Date">
+            <userInfo>
+                <entry key="keyMapping" value="Date field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="floatField" optional="YES" attributeType="Double" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="Float field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="iD" optional="YES" attributeType="Integer 32" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="ID"/>
+            </userInfo>
+        </attribute>
+        <attribute name="integer64BitsField" optional="YES" attributeType="Integer 64">
+            <userInfo>
+                <entry key="keyMapping" value="Integer 64 bits field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="integerField" optional="YES" attributeType="Integer 32" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="integer" value="YES"/>
+                <entry key="keyMapping" value="Integer field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="longIntegerField" optional="YES" attributeType="Integer 32" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="Long Integer field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="pictureField" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData">
+            <userInfo>
+                <entry key="image" value="YES"/>
+                <entry key="keyMapping" value="Picture field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="realField" optional="YES" attributeType="Double" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="Real field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="textField" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="keyMapping" value="Text field"/>
+            </userInfo>
+        </attribute>
+        <attribute name="timeField" optional="YES" attributeType="Integer 64" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="duration" value="YES"/>
+                <entry key="keyMapping" value="Time field"/>
+            </userInfo>
+        </attribute>
+        <userInfo>
+            <entry key="globalStamp" value="YES"/>
+            <entry key="primaryKey" value="ID"/>
+        </userInfo>
+    </entity>
+    <entity name="Employes" representedClassName="Employes" syncable="YES" codeGenerationType="class">
+        <attribute name="avatar" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData">
+            <userInfo>
+                <entry key="image" value="YES"/>
+                <entry key="keyMapping" value="Avatar"/>
+            </userInfo>
+        </attribute>
+        <attribute name="iD" optional="YES" attributeType="Integer 32" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="ID"/>
+            </userInfo>
+        </attribute>
+        <attribute name="managerID" optional="YES" attributeType="Integer 32" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="keyMapping" value="Name"/>
+            </userInfo>
+        </attribute>
+        <attribute name="serviceID" optional="YES" attributeType="Integer 32" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="ServiceID"/>
+            </userInfo>
+        </attribute>
+        <relationship name="manager" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Employes" inverseName="subordinates" inverseEntity="Employes">
+            <userInfo>
+                <entry key="expand" value="ID,Name,ServiceID,managerID,Avatar"/>
+            </userInfo>
+        </relationship>
+        <relationship name="service" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Service" inverseName="employees" inverseEntity="Service">
+            <userInfo>
+                <entry key="expand" value="ID,Name,managerID"/>
+            </userInfo>
+        </relationship>
+        <relationship name="serviceManaged" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Service" inverseName="manager" inverseEntity="Service">
+            <userInfo>
+                <entry key="expand" value="ID"/>
+            </userInfo>
+        </relationship>
+        <relationship name="subordinates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Employes" inverseName="manager" inverseEntity="Employes">
+            <userInfo>
+                <entry key="expand" value="ID"/>
+            </userInfo>
+        </relationship>
+        <userInfo>
+            <entry key="globalStamp" value="YES"/>
+            <entry key="primaryKey" value="ID"/>
+        </userInfo>
+    </entity>
+    <entity name="Service" representedClassName="Service" syncable="YES" codeGenerationType="class">
+        <attribute name="iD" optional="YES" attributeType="Integer 32" usesScalarValueType="YES">
+            <userInfo>
+                <entry key="keyMapping" value="ID"/>
+            </userInfo>
+        </attribute>
+        <attribute name="managerID" optional="YES" attributeType="Integer 32" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="keyMapping" value="Name"/>
+            </userInfo>
+        </attribute>
+        <relationship name="employees" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Employes" inverseName="service" inverseEntity="Employes">
+            <userInfo>
+                <entry key="expand" value="ID"/>
+            </userInfo>
+        </relationship>
+        <relationship name="manager" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Employes" inverseName="serviceManaged" inverseEntity="Employes">
+            <userInfo>
+                <entry key="expand" value="ID,Name,ServiceID,managerID,Avatar"/>
+            </userInfo>
+        </relationship>
+        <userInfo>
+            <entry key="globalStamp" value="YES"/>
+            <entry key="primaryKey" value="ID"/>
+        </userInfo>
+    </entity>
+    <elements>
+        <element name="Employes" positionX="200" positionY="100" width="150" height="178"/>
+        <element name="Service" positionX="400" positionY="100" width="150" height="210"/>
+        <element name="ALL_TYPES" positionX="600" positionY="100" width="150" height="223"/>
+    </elements>
+</model>

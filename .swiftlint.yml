@@ -1,0 +1,18 @@
+included:
+    - Sources
+
+# rule identifiers to exclude from running
+disabled_rules:
+    - file_length
+    - cyclomatic_complexity
+
+shorthand_operator: warning
+
+# configurable rules can be customized from this configuration file
+line_length:
+- 230
+- 250
+
+function_body_length:
+- 80
+- 100
