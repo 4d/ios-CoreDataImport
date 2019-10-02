@@ -86,9 +86,9 @@
         "package": "Prephirences",
         "repositoryURL": "https://github.com/phimage/Prephirences.git",
         "state": {
-          "branch": "HEAD",
+          "branch": null,
           "revision": "81b4792293972ec7541a941333e584ccc7976198",
-          "version": null
+          "version": "5.1.0"
         }
       },
       {
@@ -96,7 +96,7 @@
         "repositoryURL": "http://srv-git:3000/qmobile/QMobileAPI.git",
         "state": {
           "branch": "HEAD",
-          "revision": "79c85eeb67f737ebd019e9b7801dc62652218eaa",
+          "revision": "eeac19eaaf6c1ca67b172dcdc9a9aa128920f571",
           "version": null
         }
       },
@@ -105,7 +105,7 @@
         "repositoryURL": "http://srv-git:3000/qmobile/QMobileDataStore.git",
         "state": {
           "branch": "HEAD",
-          "revision": "03ac9c69001c18cb4a38bb6f2179943d264ebdf8",
+          "revision": "a4a6fffd0d52d1a8292416bf26c4409ee0cbbcb1",
           "version": null
         }
       },
@@ -114,7 +114,7 @@
         "repositoryURL": "http://srv-git:3000/qmobile/QMobileDataSync.git",
         "state": {
           "branch": "HEAD",
-          "revision": "ee4db1aba464cfee54c9f41cb8fa7a10c4787dfe",
+          "revision": "658514da45fb7fc09ac7a54a8c270807b2b679f1",
           "version": null
         }
       },

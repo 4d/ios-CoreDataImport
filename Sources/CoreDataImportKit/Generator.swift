@@ -42,7 +42,14 @@ class Generator {
             return (manageObjectModel, modelName)
         })
 
+        let storeURL = outputURL.appendingPathComponent(modelName).appendingPathExtension("sqlite").resolvingSymlinksInPath()
+        if fileManager.fileExists(atPath: storeURL.path) {
+            logger.error("Destination \(storeURL) already exists. Remove it.")
+            try? fileManager.removeItem(at: storeURL)
+        }
+
         let dataStore = CoreDataStore(storeType: .sql(outputURL))
+
         let runLoop: RunLoop = .current
         logger.info("Loading data store")
         dataStore.load { result in
