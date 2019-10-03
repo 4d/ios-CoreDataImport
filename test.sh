@@ -1,33 +1,53 @@
 #/bin/bash
+mode=$1  # release or debug
+folder=$2
 
-mode="release" # release or debug
-./.build/$mode/coredataimport --structure Resources/Structures.xcdatamodeld --asset Resources/Assets.xcassets --output Resources
+if [ -z "$mode" ]
+then
+    mode="release"
+fi
+if [ -z "$folder" ]
+then
+    folder="Resources"
+fi
 
-# todo: make a loop on hash/dico
-table="EMPLOYES"
-expected=11
-count=$(sqlite3 Resources/Structures.sqlite "select count(*) FROM Z$table")
-if [ $count -eq $expected ]; then
-     echo "$count $table ok"
- else
-     >&2 echo "expected $expected but receive $count for $table"
-     exit 1
-fi
-table="ALL_TYPES"
-expected=4
-count=$(sqlite3 Resources/Structures.sqlite "select count(*) FROM Z$table")
-if [ $count -eq $expected ]; then
-     echo "$count $table ok"
- else
-     >&2 echo "expected $expected but receive $count for $table"
-     exit 1
-fi
-table="SERVICE"
-expected=0
-count=$(sqlite3 Resources/Structures.sqlite "select count(*) FROM Z$table")
-if [ $count -eq $expected ]; then
-     echo "$count $table ok"
- else
-     >&2 echo "expected $expected but receive $count for $table"
-     exit 1
+./.build/$mode/coredataimport --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder
+
+# todo: make a loop on hash/dico, maybe find in jSON
+if [ "$folder" == "Resources" ]; then
+
+    table="EMPLOYES"
+    expected=10
+    count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
+    if [ $count -eq $expected ]; then
+         echo "$count $table ok"
+     else
+         >&2 echo "expected $expected but receive $count for $table"
+         exit 1
+    fi
+    table="ALL_TYPES"
+    expected=4
+    count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
+    if [ $count -eq $expected ]; then
+         echo "$count $table ok"
+     else
+         >&2 echo "expected $expected but receive $count for $table"
+         exit 1
+    fi
+    table="SERVICE"
+    expected=0
+    count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
+    if [ $count -eq $expected ]; then
+         echo "$count $table ok"
+     else
+         >&2 echo "expected $expected but receive $count for $table"
+         exit 1
+    fi
+else
+    echo "Database content is not tested"
+    tables=$(sqlite3 $folder/Structures.sqlite .tables)
+    for table in $tables; do
+        echo $table
+        # show more info?
+    done
 fi
