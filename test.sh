@@ -45,9 +45,17 @@ if [ "$folder" == "Resources" ]; then
     fi
 else
     echo "Database content is not tested"
+    total=0
     tables=$(sqlite3 $folder/Structures.sqlite .tables)
     for table in $tables; do
         echo $table
         # show more info?
+        count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
+        echo "$count for $table"
+        total=$total+$count
     done
+    if [ $total -eq 0 ]; then
+        >&2 echo "there is no record in database"
+        exit 1
+    fi   
 fi
