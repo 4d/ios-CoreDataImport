@@ -48,10 +48,9 @@ else
     total=0
     tables=$(sqlite3 $folder/Structures.sqlite .tables)
     for table in $tables; do
-        echo $table
         # show more info?
-        count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
-        echo "$count for $table"
+        count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM $table")
+        echo "$table: $count"
         total=$total+$count
     done
     if [ $total -eq 0 ]; then
