@@ -22,6 +22,10 @@ struct GenerateCommand: CommandProtocol {
     func run(_ options: Options) -> Result<(), ClientError> {
         logger.setup(level: options.level, showLogIdentifier: false, showFunctionName: false, showThreadName: false, showLevel: true, showFileNames: false, showLineNumbers: false, showDate: false, writeToFile: nil, fileLevel: nil)
 
+        if options.coreDataDebug {
+            UserDefaults.standard.set(1, forKey: "com.apple.CoreData.SQLDebug")
+        }
+
         guard let assetPath = options.asset else {
             logger.error("You must define --asset <asset path>")
             exit(1)
@@ -98,13 +102,16 @@ struct GenerateOptions: OptionsProtocol {
     let output: String
     let verbosity: Int?
     let quiet: Bool
+    let coreDataDebug: Bool
 
-    static func create(_ structure: String?) -> (_ asset: String?) -> (_ output: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) -> GenerateOptions {
+    static func create(_ structure: String?) -> (_ asset: String?) -> (_ output: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ coreDataDebug: Bool) -> GenerateOptions {
         return { asset in
             return { output in
                 return { verbosity in
                     return { quiet in
-                        self.init(structure: structure, asset: asset, output: output, verbosity: verbosity, quiet: quiet)
+                        return { coreDataDebug in
+                            self.init(structure: structure, asset: asset, output: output, verbosity: verbosity, quiet: quiet, coreDataDebug: coreDataDebug)
+                        }
                     }
                 }
             }
@@ -118,6 +125,7 @@ struct GenerateOptions: OptionsProtocol {
             <*> mode <| Option(key: "output", defaultValue: FileManager.default.currentDirectoryPath, usage: "the path to IBGraph's configuration file")
             <*> mode <| Option(key: "verbosity", defaultValue: XCGLogger.Level.info.rawValue, usage: "the level of verbosity (0: verbose, 1: debug, 2: info, .. ), default: 2")
             <*> mode <| Option(key: "quiet", defaultValue: false, usage: "do not log (equalivalent to verbosity=6")
+            <*> mode <| Option(key: "coreDataDebug", defaultValue: false, usage: "debug core data request")
     }
 
     var level: XCGLogger.Level {

@@ -17,12 +17,15 @@ import QMobileDataSync
 
 import Prephirences
 
-class Generator {
+public class Generator {
 
     var shouldExit: Bool = false
-    var hasError: Bool = false
+    public var hasError: Bool = false
 
-    func generate(urls: [URL], structureURL: URL, outputURL: URL, modelName: String) {
+    public init() {
+    }
+
+    public func generate(urls: [URL], structureURL: URL, outputURL: URL, modelName: String) {
         guard let data = try? Data(contentsOf: structureURL) else {
             logger.error("cannot read \(structureURL)")
             exit(1)
@@ -43,20 +46,28 @@ class Generator {
         })
 
         let storeURL = outputURL.appendingPathComponent(modelName).appendingPathExtension("sqlite").resolvingSymlinksInPath()
-        if fileManager.fileExists(atPath: storeURL.path) {
+        let storePath = storeURL.path
+        if fileManager.fileExists(atPath: storePath) {
             logger.error("Destination \(storeURL) already exists. Remove it.")
             try? fileManager.removeItem(at: storeURL)
+            try? fileManager.removeItem(at: storeURL.deletingPathExtension().appendingPathExtension("sqlite-shm"))
+            try? fileManager.removeItem(at: storeURL.deletingPathExtension().appendingPathExtension("sqlite-wal"))
         }
 
         let dataStore = CoreDataStore(storeType: .sql(outputURL))
 
         let runLoop: RunLoop = .current
+        var storeSize: UInt64 = 0
         logger.info("Loading data store")
         dataStore.load { result in
+            storeSize = fileManager.size(atPath: storePath) ?? 0
+            logger.debug("Initial store size \(storeSize)")
             switch result {
             case .success:
                 logger.info("...data store loaded.")
+                //DataSync.instance.loadTable { _ in
                 self.perform(dataStore, urls, fileManager)
+            // }
             case .failure(let error):
                 logger.error("...data store not loaded: \(error)")
             }
@@ -66,12 +77,15 @@ class Generator {
         while !shouldExit && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
             // do nothing
         }
-        // Add sometimes for disk flush?
-        // TODO: find a better way to wait for disk flush
+        // Add sometimes for disk flush? just check file size?
         logger.debug("Wait disk flush...")
+        logger.debug("Store size \(fileManager.size(atPath: storePath) ?? 0)")
         var cpt = 0
-        while cpt < 2 && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
+        var newSize = fileManager.size(atPath: storePath) ?? 0
+        while (cpt < 2 && newSize <= storeSize) && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
             cpt+=1
+            logger.debug("Store size \(fileManager.size(atPath: storePath) ?? 0)")
+            newSize = fileManager.size(atPath: storePath) ?? 0
         }
     }
 

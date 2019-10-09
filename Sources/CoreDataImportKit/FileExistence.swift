@@ -38,3 +38,15 @@ extension FileManager {
         }
     }
 }
+
+extension FileManager {
+
+    public func size(atPath path: String) -> UInt64? {
+        if let attributes: [FileAttributeKey: Any] = try? self.attributesOfItem(atPath: path),
+            let value = attributes[FileAttributeKey.size] as? NSNumber {
+            return value.uint64Value
+        }
+        return nil
+    }
+
+}
