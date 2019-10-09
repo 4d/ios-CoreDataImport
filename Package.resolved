@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/phimage/MomXML.git",
         "state": {
           "branch": "HEAD",
-          "revision": "7ad04467823a0d53805021ec09f00642c6c575ad",
+          "revision": "46bcaeae0c170c45a4ce3c3ca414ec03a4fef571",
           "version": null
         }
       },
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/Moya/Moya.git",
         "state": {
           "branch": null,
-          "revision": "0e0ea734ebe94b211a191bcc441175eb1fd8f820",
-          "version": "14.0.0-beta.3"
+          "revision": "088cf56826aed42903241899b9ff750d5837ecea",
+          "version": "14.0.0-beta.4"
         }
       },
       {
@@ -96,7 +96,7 @@
         "repositoryURL": "http://srv-git:3000/qmobile/QMobileAPI.git",
         "state": {
           "branch": "HEAD",
-          "revision": "eeac19eaaf6c1ca67b172dcdc9a9aa128920f571",
+          "revision": "f732e561594f1f291640bd3cf8ca499523e635ad",
           "version": null
         }
       },
@@ -105,7 +105,7 @@
         "repositoryURL": "http://srv-git:3000/qmobile/QMobileDataStore.git",
         "state": {
           "branch": "HEAD",
-          "revision": "a4a6fffd0d52d1a8292416bf26c4409ee0cbbcb1",
+          "revision": "d212ac413ae284048a47c862b91273ee2f3fb707",
           "version": null
         }
       },
@@ -114,7 +114,7 @@
         "repositoryURL": "http://srv-git:3000/qmobile/QMobileDataSync.git",
         "state": {
           "branch": "HEAD",
-          "revision": "658514da45fb7fc09ac7a54a8c270807b2b679f1",
+          "revision": "51c89060fa0ad3d40c007d89a55914512419b6dc",
           "version": null
         }
       },
