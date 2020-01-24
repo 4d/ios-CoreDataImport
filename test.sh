@@ -1,17 +1,17 @@
 #/bin/bash
-mode=$1  # release or debug
+binary=$1
 folder=$2
 
 if [ -z "$mode" ]
 then
-    mode="release"
+    binary=".build/release/coredataimport"
 fi
 if [ -z "$folder" ]
 then
     folder="Resources"
 fi
 
-./.build/$mode/coredataimport --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder
+./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder
 
 # todo: make a loop on hash/dico, maybe find in jSON
 if [ "$folder" == "Resources" ]; then
