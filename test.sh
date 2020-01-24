@@ -2,7 +2,7 @@
 binary=$1
 folder=$2
 
-if [ -z "$mode" ]
+if [ -z "$binary" ]
 then
     binary=".build/release/coredataimport"
 fi
