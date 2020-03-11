@@ -112,12 +112,19 @@ public class Generator {
                 do {
                     let records =  try builder.parseArray(json: json)
                     logger.info("Imported \(records.count) entity for \(tableName)")
-                    if logger.isEnabledFor(level: .debug), let count = try? context.count(in: builder.tableInfo.name ) {
-                        if count != records.count {
-                            logger.warning("Found \(count) entity in \(tableName)" )
-                        } else {
-                            logger.debug("Found \(count) entity in \(tableName)" )
+                    if logger.isEnabledFor(level: .debug) {
+
+                        if let count = try? context.count(in: builder.tableInfo.name) {
+                            if count != records.count {
+                                logger.warning("Found \(count) entity in \(tableName)")
+                            } else {
+                                logger.debug("Found \(count) entity in \(tableName)")
+                            }
                         }
+                        for destinationTable in builder.tableInfo.relationships.compactMap({ $0.destinationTable?.name }) {
+                            logger.warning("RELATED TABLE: Found \(String(describing: try? context.count(in: destinationTable))) entity in \(destinationTable)")
+                        }
+                        logger.warning("PENDING RECORD: \(PendingRecord.pendingRecords.count)")
                     }
                 } catch {
                     self.hasError = true
@@ -139,7 +146,7 @@ public class Generator {
                 stampStorage.globalStamp = globalStamp
                 logger.debug("Global stamp \(globalStamp)")
             }
-            let toDeleteRecords: [Record] = Array(Record.pendingRecords)
+            let toDeleteRecords: [Record] = Array(PendingRecord.pendingRecords)
             if !toDeleteRecords.isEmpty {
                 logger.info("Remove from dump records that are only accessible by links")
                 context.delete(records: toDeleteRecords)
