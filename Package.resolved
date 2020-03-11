@@ -5,9 +5,9 @@
         "package": "Alamofire",
         "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
         "state": {
-          "branch": null,
-          "revision": "c1d14588e5558a3669fd03510d135d88c5109069",
-          "version": "5.0.0-rc.2"
+          "branch": "5.0.0",
+          "revision": "0c8cb78d05b6d067ee331c05058ff4dedcb45ffa",
+          "version": null
         }
       },
       {
@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "DeviceKit",
+        "repositoryURL": "https://github.com/phimage/DeviceKit.git",
+        "state": {
+          "branch": "feature/macos",
+          "revision": "ecdfbb1fe053507cc3eaeaa8d078e64180de1809",
+          "version": null
+        }
+      },
+      {
         "package": "FileKit",
         "repositoryURL": "https://github.com/nvzqz/FileKit.git",
         "state": {
@@ -68,9 +77,9 @@
         "package": "Moya",
         "repositoryURL": "https://github.com/Moya/Moya.git",
         "state": {
-          "branch": null,
-          "revision": "088cf56826aed42903241899b9ff750d5837ecea",
-          "version": "14.0.0-beta.4"
+          "branch": "14.0.0",
+          "revision": "b3e5a233e0d85fd4d69f561c80988590859c7dee",
+          "version": null
         }
       },
       {
@@ -78,8 +87,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {
           "branch": null,
-          "revision": "6abeb3f5c03beba2b9e4dbe20886e773b5b629b6",
-          "version": "8.0.4"
+          "revision": "b02b00b30b6353632aa4a5fb6124f8147f7140c0",
+          "version": "8.0.5"
         }
       },
       {
@@ -96,7 +105,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileAPI.git",
         "state": {
           "branch": "HEAD",
-          "revision": "f732e561594f1f291640bd3cf8ca499523e635ad",
+          "revision": "f2369717f599d55a23276aea3e246b2633a7a2c9",
           "version": null
         }
       },
@@ -105,7 +114,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileDataStore.git",
         "state": {
           "branch": "HEAD",
-          "revision": "d212ac413ae284048a47c862b91273ee2f3fb707",
+          "revision": "8d1ecd321d63b9f0545dad4fbe6b13c88aa9f8f2",
           "version": null
         }
       },
@@ -114,7 +123,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileDataSync.git",
         "state": {
           "branch": "HEAD",
-          "revision": "51c89060fa0ad3d40c007d89a55914512419b6dc",
+          "revision": "f7b9756a51f8a5312afe8ced6132b2e43a24a1a4",
           "version": null
         }
       },
@@ -141,8 +150,8 @@
         "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
         "state": {
           "branch": null,
-          "revision": "b3e888b4972d9bc76495dd74d30a8c7fad4b9395",
-          "version": "5.0.1"
+          "revision": "c1bd31b397d87a54467af4161dde9d6b27720c19",
+          "version": "5.1.0"
         }
       },
       {

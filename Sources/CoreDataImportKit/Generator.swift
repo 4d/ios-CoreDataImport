@@ -112,7 +112,7 @@ public class Generator {
                 do {
                     let records =  try builder.parseArray(json: json)
                     logger.info("Imported \(records.count) entity for \(tableName)")
-                    if logger.isEnabledFor(level: .debug), let count = try? context.count(in: tableName) {
+                    if logger.isEnabledFor(level: .debug), let count = try? context.count(in: builder.tableInfo.name ) {
                         if count != records.count {
                             logger.warning("Found \(count) entity in \(tableName)" )
                         } else {
@@ -139,6 +139,24 @@ public class Generator {
                 stampStorage.globalStamp = globalStamp
                 logger.debug("Global stamp \(globalStamp)")
             }
+            let toDeleteRecords: [Record] = Array(Record.pendingRecords)
+            if !toDeleteRecords.isEmpty {
+                logger.info("Remove from dump records that are only accessible by links")
+                context.delete(records: toDeleteRecords)
+
+                if logger.isEnabledFor(level: .debug) {
+                    let recordsByTableName = toDeleteRecords.dictionaryBy{ (record: Record) in
+                        // return record.tableName // compilation issue, ambigious
+                        return record.tableInfo.name
+                    }
+                    for (tableName, records) in recordsByTableName {
+                        logger.debug("\(tableName): \(records.count)")
+                        if logger.isEnabledFor(level: .verbose) {
+                            logger.verbose("\(records)")
+                        }
+                    }
+                }
+            }
             do {
                 try context.commit()
             } catch let error as DataStoreError {
@@ -149,5 +167,24 @@ public class Generator {
                 logger.error("Error when saving database \(error)")
             }
         }
+    }
+}
+
+extension Array {
+    /// Create a dictionary from this array.
+    ///
+    /// - parameter key: A closure to get hashing key from array values.
+    ///
+    /// - returns: the dictionary
+    func dictionaryBy<T: Hashable>(key: (Element) -> T) -> [T: [Element]] {
+        var result: [T: [Element]] = [:]
+        self.forEach {
+            let keyValue = key($0)
+            if result[keyValue] == nil {
+                result[keyValue] = []
+            }
+            result[keyValue]?.append($0)
+        }
+        return result
     }
 }
