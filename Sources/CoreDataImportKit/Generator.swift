@@ -48,10 +48,15 @@ public class Generator {
         let storeURL = outputURL.appendingPathComponent(modelName).appendingPathExtension("sqlite").resolvingSymlinksInPath()
         let storePath = storeURL.path
         if fileManager.fileExists(atPath: storePath) {
-            logger.error("Destination \(storeURL) already exists. Remove it.")
-            try? fileManager.removeItem(at: storeURL)
-            try? fileManager.removeItem(at: storeURL.deletingPathExtension().appendingPathExtension("sqlite-shm"))
-            try? fileManager.removeItem(at: storeURL.deletingPathExtension().appendingPathExtension("sqlite-wal"))
+            logger.warning("Destination \(storeURL) already exists. Removing it it.")
+            do {
+                try fileManager.removeItem(at: storeURL)
+                try? fileManager.removeItem(at: storeURL.deletingPathExtension().appendingPathExtension("sqlite-shm"))
+                try? fileManager.removeItem(at: storeURL.deletingPathExtension().appendingPathExtension("sqlite-wal"))
+            } catch {
+                logger.error("Cannot remove \(storeURL). Please remove it it. \(error)")
+                return
+            }
         }
 
         let dataStore = CoreDataStore(storeType: .sql(outputURL))
