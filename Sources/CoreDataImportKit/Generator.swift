@@ -129,7 +129,7 @@ public class Generator {
                         for destinationTable in builder.tableInfo.relationships.compactMap({ $0.destinationTable?.name }) {
                             logger.warning("RELATED TABLE: Found \(String(describing: try? context.count(in: destinationTable))) entity in \(destinationTable)")
                         }
-                        logger.warning("PENDING RECORD: \(PendingRecord.pendingRecords.count)")
+                        // logger.warning("PENDING RECORD: \(PendingRecord.pendingRecords.count)")
                     }
                 } catch {
                     self.hasError = true
@@ -151,7 +151,7 @@ public class Generator {
                 stampStorage.globalStamp = globalStamp
                 logger.debug("Global stamp \(globalStamp)")
             }
-            let toDeleteRecords: [Record] = Array(PendingRecord.pendingRecords)
+            let toDeleteRecords: [Record] = PendingRecord.consume()
             if !toDeleteRecords.isEmpty {
                 logger.info("Remove from dump records that are only accessible by links")
                 context.delete(records: toDeleteRecords)
