@@ -26,7 +26,7 @@ public class Dumper {
     public init() {
     }
 
-    public func dump(serverURL: URL, structureURL: URL, outputURL: URL, modelName: String, token: String) {
+    public func dump(serverURL: URL, structureURL: URL, outputURL: URL, modelName: String, token: String, filter: String?) {
 
 
         guard let data = try? Data(contentsOf: structureURL) else {
@@ -72,13 +72,18 @@ public class Dumper {
                             let data = response.data
                             let dataset = outputURL.appendingPathComponent(table.name).appendingPathExtension("dataset")
                             try? fileManager.createDirectory(at: dataset, withIntermediateDirectories: true)
-                            let fileURL = dataset.appendingPathComponent(table.name+".data.json")
+                            let fileName = table.name+".data.json"
+                            let fileURL = dataset.appendingPathComponent(fileName)
                             do {
                                 if fileManager.fileExists(atPath: fileURL.absoluteString) {
                                     try fileManager.removeItem(at: fileURL)
                                 }
                                 try data.write(to: fileURL)
                                 logger.info("Table \(table.name) dumped")
+
+                                let contentJSON = "{\"data\":[{\"filename\":\""+fileName+"\",\"idiom\":\"universal\",\"universal-type-identifier\":\"public.json\"}],\"info\":{\"author\":\"xcode\",\"version\":1}}"
+                                try? contentJSON.data(using: .utf8)?.write(to: dataset.appendingPathComponent("Contents.json"))
+
                                 cpt += 1
                                 if cpt >= count {
                                     self.shouldExit = true
@@ -88,10 +93,13 @@ public class Dumper {
                             }
                         case .failure(let error):
                             logger.error("\(error)")
+                            if let restError = error.restErrors {
+                                logger.error("\(restError)")
+                            }
                             self.shouldExit = true
                         }
                     }
-                    self.configureRecordsRequest(target, tableInfo, table)
+                    self.configureRecordsRequest(target, tableInfo, table, filter)
                     _ = api.request(target, /*queue: queue, progress: progress, */completion: completion)
                 }
             }
@@ -103,13 +111,19 @@ public class Dumper {
     }
 
     /// Configure the record request
-    func configureRecordsRequest(_ request: RecordsRequest, _ tableInfo: DataStoreTableInfo, _ table: Table) {
+    func configureRecordsRequest(_ request: RecordsRequest, _ tableInfo: DataStoreTableInfo, _ table: Table, _ filter: String?) {
         /// Defined limit
         request.limit(1000000 /*Prephirences.DataSync.Request.Page.limit*/)
 
         // If a filter is defined by table in data store, use it
-        if let filter = tableInfo.filter {
-            request.filter(filter)
+        if let tableFilter = tableInfo.filter {
+
+            if let filter = filter {
+                request.filter("(\(tableFilter)) AND \(filter)")
+            } else {
+                request.filter(tableFilter)
+            }
+
 
             /* /// Get user info to filter data
              if var params = APIManager.instance.authToken?.userInfo {
@@ -123,6 +137,10 @@ public class Dumper {
              // target.params([params])
              logger.debug("Filter query params \(params) for \(table.name) with filter \(filter)")
              }*/
+        } else {
+            if let filter = filter {
+                request.filter(filter)
+            }
         }
 
     }
@@ -131,27 +149,27 @@ public class Dumper {
     func getAttributes(_ table: Table, _ tableInfo: DataStoreTableInfo) -> [String] {
         /* guard !Prephirences.DataSync.noAttributeFilter else { return []  }*/
         var attributes: [String] = []
-        if false /*Prephirences.DataSync.expandAttribute */{
-            attributes = table.attributes.filter { !$0.1.type.isRelative }.map { $0.0 }
-        } else {
-            //let fieldInfoByOriginalName = tableInfo.fields.dictionary { $0.originalName }
-            attributes = table.attributes.compactMap { (name, attribute) in
-                if let relationType = attribute.relativeType {
-                    if let expand = relationType.expand {
-                        let expands = expand.split(separator: ",")
-                        return expands.map { "\(name).\($0)"}.joined(separator: ",")
-                    }
-                    return nil
-                } else {
-                    if false /*Prephirences.DataSync.allowMissingField*/ {
-                        /*if let fieldInfo = fieldInfoByOriginalName?[name], fieldInfo.isMissingRemoteField {  // allow to reload event if missing attributes
-                         return nil
-                         }*/
-                    }
-                    return name
+        /* if false /*Prephirences.DataSync.expandAttribute */{
+         attributes = table.attributes.filter { !$0.1.type.isRelative }.map { $0.0 }
+         } else {*/
+        //let fieldInfoByOriginalName = tableInfo.fields.dictionary { $0.originalName }
+        attributes = table.attributes.compactMap { (name, attribute) in
+            if let relationType = attribute.relativeType {
+                if let expand = relationType.expand {
+                    let expands = expand.split(separator: ",")
+                    return expands.map { "\(name).\($0)"}.joined(separator: ",")
                 }
+                return nil
+            } else {
+                if false /*Prephirences.DataSync.allowMissingField*/ {
+                    /*if let fieldInfo = fieldInfoByOriginalName?[name], fieldInfo.isMissingRemoteField {  // allow to reload event if missing attributes
+                     return nil
+                     }*/
+                }
+                return name
             }
         }
+        /*   }*/
         return attributes
     }
 

@@ -110,7 +110,7 @@ public class Generator {
                 }
 
                 logger.info("Import \(tableName): \(dataURL) ")
-                guard let builder = DataSyncBuilder(tableName: tableName, context: context) else {
+                guard let builder = DataSyncBuilder.builder(for: tableName, context: context) else {
                     logger.error("Not able to import \(tableName). Not in structure.")
                     self.hasError = true
                     continue

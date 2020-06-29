@@ -66,7 +66,7 @@ struct DumpCommand: CommandProtocol {
 
         let start = DispatchTime.now()
         let dumper = Dumper()
-        dumper.dump(serverURL: serverURL, structureURL: structureURL, outputURL: assetURL.appendingPathComponent("Data"), modelName: modelName, token: token)
+        dumper.dump(serverURL: serverURL, structureURL: structureURL, outputURL: assetURL.appendingPathComponent("Data"), modelName: modelName, token: token, filter: options.filter)
         let nanoTime = DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
         logger.info("Time elapsed: \(timeInterval) seconds")
@@ -91,14 +91,17 @@ struct DumpOptions: OptionsProtocol {
     let verbosity: Int?
     let quiet: Bool
     let token: String?
+    let filter: String?
 
-    static func create(_ structure: String?) -> (_ asset: String?) -> (_ serverURL: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ token: String?) -> DumpOptions {
+    static func create(_ structure: String?) -> (_ asset: String?) -> (_ serverURL: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ token: String?) -> (_ filter: String?) -> DumpOptions {
         return { asset in
             return { serverURL in
                 return { verbosity in
                     return { quiet in
                         return { token in
-                            self.init(structure: structure, asset: asset, serverURL: serverURL, verbosity: verbosity, quiet: quiet, token: token)
+                            return { filter in
+                                self.init(structure: structure, asset: asset, serverURL: serverURL, verbosity: verbosity, quiet: quiet, token: token, filter: filter)
+                            }
                         }
                     }
                 }
@@ -114,6 +117,7 @@ struct DumpOptions: OptionsProtocol {
             <*> mode <| Option(key: "verbosity", defaultValue: XCGLogger.Level.info.rawValue, usage: "the level of verbosity (0: verbose, 1: debug, 2: info, .. ), default: 2")
             <*> mode <| Option(key: "quiet", defaultValue: false, usage: "do not log (equalivalent to verbosity=6")
             <*> mode <| Option(key: "token", defaultValue: nil, usage: "token to auth")
+            <*> mode <| Option(key: "filter", defaultValue: nil, usage: "additional filter")
     }
 
     var level: XCGLogger.Level {
