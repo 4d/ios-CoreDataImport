@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		4813AA6924A9DBD10020D7DB /* DumpCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4813AA6824A9DBD10020D7DB /* DumpCommand.swift */; };
+		4813AA6B24A9DCEF0020D7DB /* Dumper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4813AA6A24A9DCEF0020D7DB /* Dumper.swift */; };
 		4854FE14233C9EFD00A1FBF0 /* Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4854FE13233C9EFD00A1FBF0 /* Generator.swift */; };
 		48CF07E8234DC996001D4974 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CF07E7234DC996001D4974 /* AppDelegate.swift */; };
 		48CF07EA234DC996001D4974 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CF07E9234DC996001D4974 /* ViewController.swift */; };
@@ -1065,6 +1067,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4813AA6824A9DBD10020D7DB /* DumpCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DumpCommand.swift; sourceTree = "<group>"; };
+		4813AA6A24A9DCEF0020D7DB /* Dumper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dumper.swift; sourceTree = "<group>"; };
 		4854FE13233C9EFD00A1FBF0 /* Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generator.swift; sourceTree = "<group>"; };
 		48BBC7DD23439EE800445439 /* CoreDataImport.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CoreDataImport.entitlements; sourceTree = "<group>"; };
 		48CF07E5234DC996001D4974 /* CoreDataImportUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreDataImportUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1737,6 +1741,7 @@
 				OBJ_12 /* Commands */,
 				OBJ_15 /* FileExistence.swift */,
 				4854FE13233C9EFD00A1FBF0 /* Generator.swift */,
+				4813AA6A24A9DCEF0020D7DB /* Dumper.swift */,
 			);
 			name = CoreDataImportKit;
 			path = Sources/CoreDataImportKit;
@@ -1780,6 +1785,7 @@
 			children = (
 				OBJ_13 /* GenerateCommand.swift */,
 				OBJ_14 /* VersionCommand.swift */,
+				4813AA6824A9DBD10020D7DB /* DumpCommand.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -3711,8 +3717,10 @@
 				OBJ_660 /* App.swift in Sources */,
 				OBJ_661 /* GenerateCommand.swift in Sources */,
 				4854FE14233C9EFD00A1FBF0 /* Generator.swift in Sources */,
+				4813AA6924A9DBD10020D7DB /* DumpCommand.swift in Sources */,
 				OBJ_662 /* VersionCommand.swift in Sources */,
 				OBJ_663 /* FileExistence.swift in Sources */,
+				4813AA6B24A9DCEF0020D7DB /* Dumper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

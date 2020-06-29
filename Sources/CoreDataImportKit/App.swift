@@ -12,6 +12,7 @@ public class App {
     public func run() {
         let registry = CommandRegistry<CommandantError<()>>()
         registry.register(GenerateCommand())
+        registry.register(DumpCommand())
         registry.register(HelpCommand(registry: registry))
         registry.register(VersionCommand())
 

@@ -99,6 +99,7 @@ public class Generator {
             var stamps: [String: TableStampStorage.Stamp] = [:]
             for datasetURL in urls {
                 guard case .directory = fileManager.existence(at: datasetURL), datasetURL.pathExtension == "dataset" else {
+                    logger.debug("No dataset folder")
                     continue
                 }
                 let tempURL = datasetURL.appendingPathComponent(datasetURL.lastPathComponent).deletingPathExtension()

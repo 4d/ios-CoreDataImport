@@ -23,7 +23,9 @@ struct GenerateCommand: CommandProtocol {
         logger.setup(level: options.level, showLogIdentifier: false, showFunctionName: false, showThreadName: false, showLevel: true, showFileNames: false, showLineNumbers: false, showDate: false, writeToFile: nil, fileLevel: nil)
 
         if options.coreDataDebug {
-            UserDefaults.standard.set(1, forKey: "com.apple.CoreData.SQLDebug")
+               UserDefaults.standard.set(1, forKey: "com.apple.CoreData.SQLDebug")
+           } else {
+               UserDefaults.standard.removeObject(forKey: "com.apple.CoreData.SQLDebug")
         }
 
         guard let assetPath = options.asset else {
