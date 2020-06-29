@@ -3,7 +3,7 @@ import Foundation
 import Commandant
 import XCGLogger
 
-let logger = XCGLogger()
+let logger = XCGLogger.default
 
 public class App {
 

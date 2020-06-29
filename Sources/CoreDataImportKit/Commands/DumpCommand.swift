@@ -1,7 +1,8 @@
 //
-//  GenerateCommand.swift 
+//  DumpCommand.swift
+//  CoreDataImportKit
 //
-//  Created by Eric Marchand on 25/09/2019.
+//  Created by Eric Marchand on 29/06/2020.
 //
 
 import Foundation
@@ -9,24 +10,16 @@ import Foundation
 import Commandant
 import XCGLogger
 
-let fileManager = FileManager.default
+struct DumpCommand: CommandProtocol {
 
-struct GenerateCommand: CommandProtocol {
-
-    typealias Options = GenerateOptions
+    typealias Options = DumpOptions
     typealias ClientError = Options.ClientError
 
-    let verb: String = "generate"
-    var function: String = "Generate core data model (default command)"
+    let verb: String = "dump"
+    var function: String = "dump asset"
 
     func run(_ options: Options) -> Result<(), ClientError> {
         logger.setup(level: options.level, showLogIdentifier: false, showFunctionName: false, showThreadName: false, showLevel: true, showFileNames: false, showLineNumbers: false, showDate: false, writeToFile: nil, fileLevel: nil)
-
-        if options.coreDataDebug {
-            UserDefaults.standard.set(1, forKey: "com.apple.CoreData.SQLDebug")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "com.apple.CoreData.SQLDebug")
-        }
 
         guard let assetPath = options.asset else {
             logger.error("You must define --asset <asset path>")
@@ -35,16 +28,6 @@ struct GenerateCommand: CommandProtocol {
         let assetURL = URL(fileURLWithPath: assetPath)
         guard case .directory = fileManager.existence(at: assetURL) else {
             logger.error("asset folder \(assetPath) does not exist")
-            exit(2)
-        }
-        let dataURL = assetURL.appendingPathComponent("Data")
-        guard case .directory = fileManager.existence(at: dataURL) else {
-            logger.error("\(dataURL) not exist")
-            exit(21)
-        }
-
-        guard let urls = try? fileManager.contentsOfDirectory(at: dataURL, includingPropertiesForKeys: nil, options: []) else {
-            logger.error("Cannot read content of \(dataURL) ")
             exit(2)
         }
 
@@ -71,22 +54,25 @@ struct GenerateCommand: CommandProtocol {
             exit(2)
         }
 
-        let outputPath = options.output
-        let outputURL = URL(fileURLWithPath: outputPath)
-        guard case .directory = fileManager.existence(at: outputURL) else {
-            logger.error("output \(outputPath) not exist")
-            exit(21)
+        guard let serverURL = URL(string: options.serverURL) else {
+            logger.error("You must define a correct server url \(options.serverURL)")
+            exit(1)
+        }
+
+        guard let token = options.token else {
+            logger.error("you must define token")
+            exit(2)
         }
 
         let start = DispatchTime.now()
-        let generate = Generator()
-        generate.generate(urls: urls, structureURL: structureURL, outputURL: outputURL, modelName: modelName)
-        let nanoTime =  DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds
+        let dumper = Dumper()
+        dumper.dump(serverURL: serverURL, structureURL: structureURL, outputURL: assetURL.appendingPathComponent("Data"), modelName: modelName, token: token)
+        let nanoTime = DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
         logger.info("Time elapsed: \(timeInterval) seconds")
 
-        logger.info("Output generated in \(outputURL.resolvingSymlinksInPath().absoluteString)")
-        if generate.hasError {
+        logger.info("Dumped in \(assetURL.resolvingSymlinksInPath().absoluteString)")
+        if dumper.hasError {
             logger.warning("Some tables has not been imported")
             exit(3)
         } else {
@@ -96,23 +82,23 @@ struct GenerateCommand: CommandProtocol {
 
 }
 
-struct GenerateOptions: OptionsProtocol {
+struct DumpOptions: OptionsProtocol {
     typealias ClientError = CommandantError<()>
 
     let structure: String?
     let asset: String?
-    let output: String
+    let serverURL: String
     let verbosity: Int?
     let quiet: Bool
-    let coreDataDebug: Bool
+    let token: String?
 
-    static func create(_ structure: String?) -> (_ asset: String?) -> (_ output: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ coreDataDebug: Bool) -> GenerateOptions {
+    static func create(_ structure: String?) -> (_ asset: String?) -> (_ serverURL: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ token: String?) -> DumpOptions {
         return { asset in
-            return { output in
+            return { serverURL in
                 return { verbosity in
                     return { quiet in
-                        return { coreDataDebug in
-                            self.init(structure: structure, asset: asset, output: output, verbosity: verbosity, quiet: quiet, coreDataDebug: coreDataDebug)
+                        return { token in
+                            self.init(structure: structure, asset: asset, serverURL: serverURL, verbosity: verbosity, quiet: quiet, token: token)
                         }
                     }
                 }
@@ -120,14 +106,14 @@ struct GenerateOptions: OptionsProtocol {
         }
     }
 
-    static func evaluate(_ mode: CommandMode) -> Result<GenerateCommand.Options, CommandantError<GenerateOptions.ClientError>> {
+    static func evaluate(_ mode: CommandMode) -> Result<DumpCommand.Options, CommandantError<GenerateOptions.ClientError>> {
         return create
             <*> mode <| Option(key: "structure", defaultValue: nil, usage: "validate project root directory")
             <*> mode <| Option(key: "asset", defaultValue: nil, usage: "the reporter used to show graph")
-            <*> mode <| Option(key: "output", defaultValue: FileManager.default.currentDirectoryPath, usage: "the path to IBGraph's configuration file")
+            <*> mode <| Option(key: "server", defaultValue: "http://localhost", usage: "server URL")
             <*> mode <| Option(key: "verbosity", defaultValue: XCGLogger.Level.info.rawValue, usage: "the level of verbosity (0: verbose, 1: debug, 2: info, .. ), default: 2")
             <*> mode <| Option(key: "quiet", defaultValue: false, usage: "do not log (equalivalent to verbosity=6")
-            <*> mode <| Option(key: "coreDataDebug", defaultValue: false, usage: "debug core data request")
+            <*> mode <| Option(key: "token", defaultValue: nil, usage: "token to auth")
     }
 
     var level: XCGLogger.Level {
