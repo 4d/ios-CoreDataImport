@@ -151,10 +151,11 @@ public class Generator {
                 }
                 stampStorage.globalStamp = globalStamp
                 logger.debug("Global stamp \(globalStamp)")
+                stampStorage.lastSync = Date()
             }
             let toDeleteRecords: [Record] = context.pendingRecords
             if !toDeleteRecords.isEmpty {
-                logger.info("Remove from dump records that are only accessible by links")
+                logger.info("Remove from dump records that are only accessible by links (\(toDeleteRecords.count))")
                 context.delete(records: toDeleteRecords)
 
                 if logger.isEnabledFor(level: .debug) {

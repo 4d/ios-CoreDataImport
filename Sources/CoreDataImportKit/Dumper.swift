@@ -155,7 +155,11 @@ public class Dumper {
         //let fieldInfoByOriginalName = tableInfo.fields.dictionary { $0.originalName }
         attributes = table.attributes.compactMap { (name, attribute) in
             if let relationType = attribute.relativeType {
-                if let expand = relationType.expand {
+                if relationType.isToMany {
+                    // TODO Check if not a slave table destination
+                    return nil // let many to 1 relation make the job
+                }
+                else if let expand = relationType.expand {
                     let expands = expand.split(separator: ",")
                     return expands.map { "\(name).\($0)"}.joined(separator: ",")
                 }
@@ -175,12 +179,3 @@ public class Dumper {
 
 
 }
-/*
- extension Array {
-
- func dictionary<T: Hashable>(key: (Element) -> T) -> [T: Element] {
- var result: [T: Element] = [:]
- self.forEach({ result[key($0)] = $0 })
- return result
- }
- }*/

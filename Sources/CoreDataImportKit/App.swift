@@ -13,6 +13,7 @@ public class App {
         let registry = CommandRegistry<CommandantError<()>>()
         registry.register(GenerateCommand())
         registry.register(DumpCommand())
+        registry.register(CheckCommand())
         registry.register(HelpCommand(registry: registry))
         registry.register(VersionCommand())
 
