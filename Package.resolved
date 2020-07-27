@@ -69,7 +69,7 @@
         "repositoryURL": "https://github.com/phimage/MomXML.git",
         "state": {
           "branch": "HEAD",
-          "revision": "af192409d9b183fb853d6b13425a20f3346c2889",
+          "revision": "4b1268195512492dbcfdae2635c5356eafdae4eb",
           "version": null
         }
       },
@@ -114,7 +114,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileDataStore.git",
         "state": {
           "branch": "HEAD",
-          "revision": "8bf9bef1677085f4b50b4aa2a317874866f76011",
+          "revision": "7d4076837520feee7cff5e8c1c16710e7795a752",
           "version": null
         }
       },
@@ -123,7 +123,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileDataSync.git",
         "state": {
           "branch": "HEAD",
-          "revision": "72fd9030c549b40a280552904778ded09fc545c7",
+          "revision": "f1bb5be553c42a0fad05d5e24cc2efe844d7196e",
           "version": null
         }
       },
