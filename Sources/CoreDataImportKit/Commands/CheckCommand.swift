@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CheckCommand.swift
 //  
 //
 //  Created by Eric Marchand on 30/06/2020.
@@ -104,8 +104,8 @@ struct CheckOptions: OptionsProtocol {
 
     static func evaluate(_ mode: CommandMode) -> Result<CheckCommand.Options, CommandantError<CheckOptions.ClientError>> {
         return create
-            <*> mode <| Option(key: "structure", defaultValue: nil, usage: "validate project root directory")
-            <*> mode <| Option(key: "asset", defaultValue: nil, usage: "the reporter used to show graph")
+            <*> mode <| Option(key: "structure", defaultValue: nil, usage: "the core data structure path")
+            <*> mode <| Option(key: "asset", defaultValue: nil, usage: "the asset path")
             <*> mode <| Option(key: "output", defaultValue: FileManager.default.currentDirectoryPath, usage: "the path to IBGraph's configuration file")
             <*> mode <| Option(key: "verbosity", defaultValue: XCGLogger.Level.info.rawValue, usage: "the level of verbosity (0: verbose, 1: debug, 2: info, .. ), default: 2")
             <*> mode <| Option(key: "quiet", defaultValue: false, usage: "do not log (equalivalent to verbosity=6")
