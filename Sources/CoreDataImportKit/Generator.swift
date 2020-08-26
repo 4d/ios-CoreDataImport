@@ -25,7 +25,7 @@ public class Generator {
     public init() {
     }
 
-    public func generate(urls: [URL], structureURL: URL, outputURL: URL, modelName: String) {
+    public func generate(urls: [URL], structureURL: URL, outputURL: URL, modelName: String, legacy: Bool = false) {
         guard let data = try? Data(contentsOf: structureURL) else {
             logger.error("cannot read \(structureURL)")
             exit(1)
@@ -40,6 +40,10 @@ public class Generator {
         }
         var pref = Prephirences.sharedMutableInstance
         pref?["server.url"] = "localhost" // avoid log
+
+        if legacy {
+            pref?["dataSync.newSync"] = false
+        }
 
         CoreDataObjectModel.default = .callback({ () -> (NSManagedObjectModel, String) in
             return (manageObjectModel, modelName)

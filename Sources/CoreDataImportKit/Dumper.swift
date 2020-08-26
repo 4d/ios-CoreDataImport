@@ -48,6 +48,7 @@ public class Dumper {
         var pref = Prephirences.sharedMutableInstance
         pref?["server.url"] = serverURL.absoluteString
 
+        // pref?["api.records.extendedAttributes"] = false
 
         let api = APIManager.instance
         api.authToken = AuthToken(id: "token", statusText: "command line", token: token)
@@ -146,36 +147,55 @@ public class Dumper {
     }
 
     /// For one table, get list of attribute to use in records request.
-    func getAttributes(_ table: Table, _ tableInfo: DataStoreTableInfo) -> [String] {
-        /* guard !Prephirences.DataSync.noAttributeFilter else { return []  }*/
-        var attributes: [String] = []
+    func getAttributes(_ table: Table, _ tableInfo: DataStoreTableInfo) -> [String: Any] {
+
+        var attributes: [String: Any] = [:]
         /* if false /*Prephirences.DataSync.expandAttribute */{
          attributes = table.attributes.filter { !$0.1.type.isRelative }.map { $0.0 }
          } else {*/
         //let fieldInfoByOriginalName = tableInfo.fields.dictionary { $0.originalName }
-        attributes = table.attributes.compactMap { (name, attribute) in
+
+        for (name, attribute) in table.attributes {
             if let relationType = attribute.relativeType {
                 if relationType.isToMany {
                     // TODO Check if not a slave table destination
-                    return nil // let many to 1 relation make the job
+                    // let many to 1 relation make the job
                 }
-                else if let expand = relationType.expand {
-                    let expands = expand.split(separator: ",")
-                    return expands.map { "\(name).\($0)"}.joined(separator: ",")
-                }
-                return nil
+                else if let expandString = relationType.expand {
+                    let expands = expandString.split(separator: ",")
+                    if RecordsTarget.attributeInBody {
+                        var relationsInfo: [String: Any] = [:]
+                        for expand in expands {
+                            relationsInfo[String(expand)]=true
+                        }
+                        if let filter = relationType.filter {
+                            /*if let params = params {
+                                relationsInfo["__Query"]=[
+                                    "queryString": filter,
+                                    "settings": ["parameters": params]
+                                ]
+                            } else {*/
+                                relationsInfo["__Query"]=filter
+                           /* }*/
+                        }
+                        attributes[name]=relationsInfo
+                    } else {
+                        for expand in expands.map({ "\(name).\($0)"}) {
+                            attributes[expand]=true
+                        }
+                    }
+                } // else // not wanted
             } else {
                 if false /*Prephirences.DataSync.allowMissingField*/ {
                     /*if let fieldInfo = fieldInfoByOriginalName?[name], fieldInfo.isMissingRemoteField {  // allow to reload event if missing attributes
                      return nil
                      }*/
                 }
-                return name
+                 attributes[name]=true
             }
         }
         /*   }*/
         return attributes
     }
-
 
 }

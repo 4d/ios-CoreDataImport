@@ -80,7 +80,7 @@ struct GenerateCommand: CommandProtocol {
 
         let start = DispatchTime.now()
         let generate = Generator()
-        generate.generate(urls: urls, structureURL: structureURL, outputURL: outputURL, modelName: modelName)
+        generate.generate(urls: urls, structureURL: structureURL, outputURL: outputURL, modelName: modelName, legacy: options.legacy)
         let nanoTime =  DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
         logger.info("Time elapsed: \(timeInterval) seconds")
@@ -105,14 +105,17 @@ struct GenerateOptions: OptionsProtocol {
     let verbosity: Int?
     let quiet: Bool
     let coreDataDebug: Bool
+    let legacy: Bool
 
-    static func create(_ structure: String?) -> (_ asset: String?) -> (_ output: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ coreDataDebug: Bool) -> GenerateOptions {
+    static func create(_ structure: String?) -> (_ asset: String?) -> (_ output: String) -> (_ verbosity: Int?) -> (_ quiet: Bool) ->  (_ coreDataDebug: Bool) -> (_ coreDataDebug: Bool) -> GenerateOptions {
         return { asset in
             return { output in
                 return { verbosity in
                     return { quiet in
                         return { coreDataDebug in
-                            self.init(structure: structure, asset: asset, output: output, verbosity: verbosity, quiet: quiet, coreDataDebug: coreDataDebug)
+                            return { legacy in
+                                self.init(structure: structure, asset: asset, output: output, verbosity: verbosity, quiet: quiet, coreDataDebug: coreDataDebug, legacy: legacy)
+                            }
                         }
                     }
                 }
@@ -128,6 +131,7 @@ struct GenerateOptions: OptionsProtocol {
             <*> mode <| Option(key: "verbosity", defaultValue: XCGLogger.Level.info.rawValue, usage: "the level of verbosity (0: verbose, 1: debug, 2: info, .. ), default: 2")
             <*> mode <| Option(key: "quiet", defaultValue: false, usage: "do not log (equalivalent to verbosity=6")
             <*> mode <| Option(key: "coreDataDebug", defaultValue: false, usage: "debug core data request")
+            <*> mode <| Option(key: "legacy", defaultValue: false, usage: "old way to sync")
     }
 
     var level: XCGLogger.Level {
