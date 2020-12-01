@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "CoreDataImport",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v10_15)
     ],
