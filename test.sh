@@ -51,7 +51,7 @@ else
         # show more info?
         count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM $table")
         echo "$table: $count"
-        total=$total+$count
+        total=$(( $total + $count))
     done
     if [ $total -eq 0 ]; then
         >&2 echo "there is no record in database"
