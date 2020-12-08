@@ -15,7 +15,8 @@ echo "./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Asse
 ./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder
 
 # todo: make a loop on hash/dico, maybe find in jSON
-if [ "$folder" == "Resources" ]; then
+foldername=`basename $folder`
+if [ "$foldername" == "Resources" ]; then
 
     table="EMPLOYES"
     expected=10
