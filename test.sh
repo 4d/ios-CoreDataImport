@@ -11,6 +11,7 @@ then
     folder="Resources"
 fi
 
+echo "./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
 ./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder
 
 # todo: make a loop on hash/dico, maybe find in jSON
