@@ -47,14 +47,30 @@ public class Checker {
             _ = dataStore.perform(.foreground, wait: true) { context in
                 let tableInfos = context.tablesInfo
 
-                var tableStats: [TableStats] = []
+                var tableStatss: [TableStats] = []
                 for tableInfo in tableInfos {
                     let request = context.fetchRequest(tableName: tableInfo.name)
                     let count = (try? context.count(for: request)) ?? -1
-                    tableStats.append(TableStats(name: tableInfo.name, count: count))
+                    var tableStats = TableStats(name: tableInfo.name, count: count)
+
+                    let records = (try? context.fetch(request)) ?? []
+
+                    for (relationName, relationInfo) in tableInfo.relationshipsByName {
+                        tableStats.relations[relationName]=0
+                        for record in records {
+                            if let relationData = record[relationName] {
+                                if relationInfo.isToMany {
+                                    tableStats.relations[relationName]=tableStats.relations[relationName]!+(relationData as! NSMutableSet).count
+                                } else {
+                                    tableStats.relations[relationName]=tableStats.relations[relationName]!+1
+                                }
+                            }
+                        }
+                    }
+                    tableStatss.append(tableStats)
                 }
                 let globalStamp = (dataStore.metadata?.globalStamp) ?? -1
-                let stats = Stats(globalStamp: globalStamp, tables: tableStats)
+                let stats = Stats(globalStamp: globalStamp, tables: tableStatss)
 
                 self.hasError = stats.hasError
                 // if json encode and print
@@ -62,6 +78,7 @@ public class Checker {
                 logger.info("Entity count:")
                 for table in stats.tables {
                     logger.info("  \(table.name): \(table.count)")
+                    logger.info("  - relation: \(table.relations)")
                 }
                 logger.info("GlobalStamp: \(stats.globalStamp), Table count: \(stats.tables.count)")
             }
@@ -81,7 +98,7 @@ struct Stats: Codable {
 struct TableStats: Codable {
     var name: String
     var count: Int
-
+    var relations: [String: Int] = [:]
     var hasError: Bool {
         return count < 0
     }
