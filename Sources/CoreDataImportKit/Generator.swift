@@ -126,13 +126,13 @@ public class Generator {
 
                         if let count = try? context.count(in: builder.tableInfo.name) {
                             if count != records.count {
-                                logger.warning("Found \(count) entity in \(tableName)")
+                                logger.warning("Found \(count) entity in \(tableName) instead of \(records.count)?")
                             } else {
                                 logger.debug("Found \(count) entity in \(tableName)")
                             }
                         }
-                        for destinationTable in builder.tableInfo.relationships.compactMap({ $0.destinationTable?.name }) {
-                            logger.warning("RELATED TABLE: Found \(String(describing: try? context.count(in: destinationTable))) entity in \(destinationTable)")
+                        for destinationTable in Set(builder.tableInfo.relationships.compactMap({ $0.destinationTable?.name })) {
+                            logger.warning("RELATED TABLE: Found \(String(describing: try? context.count(in: destinationTable))) entity in \(destinationTable) after \(tableName) import")
                         }
                         // logger.warning("PENDING RECORD: \(PendingRecord.pendingRecords.count)")
                     }

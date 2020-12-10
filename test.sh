@@ -16,8 +16,8 @@ then
     binary="./$binary"
 fi
 
-echo "$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
-"$binary" --structure "$folder/Structures.xcdatamodeld" --asset "$folder/Assets.xcassets" --output "$folder"
+echo "$binary --verbosity 0 --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
+"$binary" --verbosity 0 --structure "$folder/Structures.xcdatamodeld" --asset "$folder/Assets.xcassets" --output "$folder"
 
 # todo: make a loop on hash/dico, maybe find in jSON
 foldername=`basename $folder`
@@ -47,6 +47,6 @@ else
     done
     if [ $total -eq 0 ]; then
         >&2 echo "there is no record in database"
-        exit 1
+        exit 2
     fi   
 fi
