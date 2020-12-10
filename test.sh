@@ -16,8 +16,10 @@ then
     binary="./$binary"
 fi
 
-echo "$binary --verbosity 0 --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
-"$binary" --verbosity 0 --structure "$folder/Structures.xcdatamodeld" --asset "$folder/Assets.xcassets" --output "$folder"
+echo "$binary --verbosity 2 --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
+"$binary" --verbosity 2 --structure "$folder/Structures.xcdatamodeld" --asset "$folder/Assets.xcassets" --output "$folder"
+
+"$binary" check --structure "$folder/Structures.xcdatamodeld" --asset "$folder/Assets.xcassets" --output "$folder"
 
 # todo: make a loop on hash/dico, maybe find in jSON
 foldername=`basename $folder`
