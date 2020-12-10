@@ -11,42 +11,32 @@ then
     folder="Resources"
 fi
 
-echo "./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
-./$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder
+if [[ "$binary" != \/* ]]
+then
+    binary="./$binary"
+fi
+
+echo "$binary --structure $folder/Structures.xcdatamodeld --asset $folder/Assets.xcassets --output $folder"
+"$binary" --structure "$folder/Structures.xcdatamodeld" --asset "$folder/Assets.xcassets" --output "$folder"
 
 # todo: make a loop on hash/dico, maybe find in jSON
 foldername=`basename $folder`
-if [ "$foldername" == "Resources" ]; then
 
-    table="EMPLOYES"
-    expected=10
-    count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
-    if [ $count -eq $expected ]; then
-         echo "$count $table ok"
-     else
-         >&2 echo "expected $expected but receive $count for $table"
-         exit 1
-    fi
-    table="ALL_TYPES"
-    expected=4
-    count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
-    if [ $count -eq $expected ]; then
-         echo "$count $table ok"
-     else
-         >&2 echo "expected $expected but receive $count for $table"
-         exit 1
-    fi
-    table="SERVICE"
-    expected=0
-    count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
-    if [ $count -eq $expected ]; then
-         echo "$count $table ok"
-     else
-         >&2 echo "expected $expected but receive $count for $table"
-         exit 1
-    fi
+manifest="$folder/manifest.txt"
+if [ -f "$manifest" ]; then
+    while IFS=, read -r table expected
+    do
+        count=$(sqlite3 $folder/Structures.sqlite "select count(*) FROM Z$table")
+        if [ $count -eq $expected ]; then
+            echo "$count $table ok"
+        else
+            >&2 echo "expected $expected but receive $count for $table"
+            exit 1
+        fi
+    done < "$manifest"
+
 else
-    echo "Database content is not tested"
+    echo "Database content of $folder is not tested"
     total=0
     tables=$(sqlite3 $folder/Structures.sqlite .tables)
     for table in $tables; do
