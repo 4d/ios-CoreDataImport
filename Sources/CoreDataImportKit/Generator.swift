@@ -108,40 +108,50 @@ public class Generator {
                 }
                 let tempURL = datasetURL.appendingPathComponent(datasetURL.lastPathComponent).deletingPathExtension()
                 let tableName = tempURL.lastPathComponent
-                let dataURL = tempURL.appendingPathExtension("data.json")
-                guard case .file = fileManager.existence(at: dataURL), let json = try? JSON(fileURL: dataURL) else {
-                    continue
-                }
 
-                logger.info("Import \(tableName): \(dataURL) ")
-                guard let builder = DataSyncBuilder.builder(for: tableName, context: context) else {
-                    logger.error("Not able to import \(tableName). Not in structure.")
-                    self.hasError = true
-                    continue
-                }
-                do {
-                    let records =  try builder.parseArray(json: json)
-                    logger.info("Imported \(records.count) entity for \(tableName)")
-                    if logger.isEnabledFor(level: .debug) {
-
-                        if let count = try? context.count(in: builder.tableInfo.name) {
-                            if count != records.count {
-                                logger.warning("Found \(count) entity in \(tableName) instead of \(records.count)?")
-                            } else {
-                                logger.debug("Found \(count) entity in \(tableName)")
-                            }
-                        }
-                        for destinationTable in Set(builder.tableInfo.relationships.compactMap({ $0.destinationTable?.name })) {
-                            logger.warning("RELATED TABLE: Found \(String(describing: try? context.count(in: destinationTable))) entity in \(destinationTable) after \(tableName) import")
-                        }
-                        // logger.warning("PENDING RECORD: \(PendingRecord.pendingRecords.count)")
+                var dataURL = tempURL.appendingPathExtension("data.json")
+                var index = 0
+                while (fileManager.existence(at: dataURL) == .file) {
+                    guard let json = try? JSON(fileURL: dataURL) else {
+                        continue
                     }
-                } catch {
-                    self.hasError = true
-                    logger.error("Error when importing \(tableName): \(error)")
-                }
 
-                stamps[tableName] = json[ImportKey.globalStamp].intValue
+                    logger.info("Import \(tableName): \(dataURL) ")
+                    guard let builder = DataSyncBuilder.builder(for: tableName, context: context) else {
+                        logger.error("Not able to import \(tableName). Not in structure.")
+                        self.hasError = true
+                        continue
+                    }
+                    do {
+                        let records =  try builder.parseArray(json: json)
+                        logger.info("Imported \(records.count) entity for \(tableName)")
+                        if logger.isEnabledFor(level: .debug) {
+
+                            if let count = try? context.count(in: builder.tableInfo.name) {
+                                if count != records.count {
+                                    logger.warning("Found \(count) entity in \(tableName) instead of \(records.count)?")
+                                } else {
+                                    logger.debug("Found \(count) entity in \(tableName)")
+                                }
+                            }
+                            for destinationTable in Set(builder.tableInfo.relationships.compactMap({ $0.destinationTable?.name })) {
+                                logger.warning("RELATED TABLE: Found \(String(describing: try? context.count(in: destinationTable))) entity in \(destinationTable) after \(tableName) import")
+                            }
+                            // logger.warning("PENDING RECORD: \(PendingRecord.pendingRecords.count)")
+                        }
+                    } catch {
+                        self.hasError = true
+                        logger.error("Error when importing \(tableName) \(index): \(error)")
+                    }
+                    index+=1
+                    dataURL = tempURL.appendingPathExtension("\(index).data.json")
+
+                    if let currentStamp = stamps[tableName] {
+                        stamps[tableName] = min(currentStamp, json[ImportKey.globalStamp].intValue)
+                    } else {
+                        stamps[tableName] = json[ImportKey.globalStamp].intValue
+                    }
+                }
             }
 
             // read global stamp from embedded files
