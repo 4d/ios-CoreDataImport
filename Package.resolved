@@ -20,15 +20,6 @@
         }
       },
       {
-        "package": "DeviceKit",
-        "repositoryURL": "https://github.com/phimage/DeviceKit.git",
-        "state": {
-          "branch": "feature/macos",
-          "revision": "ecdfbb1fe053507cc3eaeaa8d078e64180de1809",
-          "version": null
-        }
-      },
-      {
         "package": "FileKit",
         "repositoryURL": "https://github.com/nvzqz/FileKit.git",
         "state": {
@@ -78,7 +69,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileAPI.git",
         "state": {
           "branch": "HEAD",
-          "revision": "c6c19bff03ddfcb368b3088614755a74eae0a7ab",
+          "revision": "76656346a60ff00985d43c6efe42b02681fac907",
           "version": null
         }
       },
@@ -87,7 +78,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileDataStore.git",
         "state": {
           "branch": "HEAD",
-          "revision": "da936688719a15ea6e419b6176ffeb996cfde560",
+          "revision": "57989f95a17ae1510a70e21d895119e695e18667",
           "version": null
         }
       },
@@ -96,7 +87,7 @@
         "repositoryURL": "https://gitlab-4d.private.4d.fr/qmobile/QMobileDataSync.git",
         "state": {
           "branch": "HEAD",
-          "revision": "52c9c3aa54859a2b76c43cb3e60b3c380ac3af23",
+          "revision": "013bf2ddb535cb34cf0bb8fffa215063ed86c48b",
           "version": null
         }
       },
