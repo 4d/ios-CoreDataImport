@@ -98,7 +98,7 @@ struct Stats: Codable {
 struct TableStats: Codable {
     var name: String
     var count: Int
-    var relations: [String: Int] = [:]
+    var relations: [String: Int] = [:]
     var hasError: Bool {
         return count < 0
     }

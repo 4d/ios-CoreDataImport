@@ -75,7 +75,7 @@ public class Generator {
             case .success:
                 logger.info("...data store loaded.")
                 //DataSync.instance.loadTable { _ in
-                self.perform(dataStore, urls, fileManager)
+                self.perform(dataStore, urls, outputURL, modelName, fileManager)
             // }
             case .failure(let error):
                 logger.error("...data store not loaded: \(error)")
@@ -91,20 +91,31 @@ public class Generator {
         logger.debug("Store size \(fileManager.size(atPath: storePath) ?? 0)")
         var cpt = 0
         var newSize = fileManager.size(atPath: storePath) ?? 0
-        while (cpt < 2 && newSize <= storeSize) && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
+        while !hasError && (cpt < 2 && newSize <= storeSize) && (runLoop.run(mode: RunLoop.Mode.default, before: Date(timeIntervalSinceNow: 5))) {
             cpt+=1
             logger.debug("Store size \(fileManager.size(atPath: storePath) ?? 0)")
             newSize = fileManager.size(atPath: storePath) ?? 0
         }
     }
 
-    fileprivate func perform(_ dataStore: DataStore, _ urls: [URL], _ fileManager: FileManager) {
+    fileprivate func mustExit(_ outputURL: URL, _ modelName: String, _ fileManager: FileManager) -> Bool {
+        let cancelURL = outputURL.appendingPathComponent(modelName).appendingPathExtension("cancel")
+        return fileManager.existence(at: cancelURL) == .file
+    }
+
+    fileprivate func perform(_ dataStore: DataStore, _ urls: [URL], _ outputURL: URL, _ modelName: String, _ fileManager: FileManager) {
         _ = dataStore.perform(.foreground, wait: true) { context in
             var stamps: [String: TableStampStorage.Stamp] = [:]
             for datasetURL in urls {
                 guard case .directory = fileManager.existence(at: datasetURL), datasetURL.pathExtension == "dataset" else {
                     logger.debug("No dataset folder")
                     continue
+                }
+                if self.mustExit(outputURL, modelName, fileManager) {
+                    self.shouldExit = true
+                    self.hasError = true
+                    logger.error("Exit before mananing \(datasetURL)")
+                    return
                 }
                 let tempURL = datasetURL.appendingPathComponent(datasetURL.lastPathComponent).deletingPathExtension()
                 let tableName = tempURL.lastPathComponent
