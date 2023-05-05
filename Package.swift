@@ -17,9 +17,9 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://gitlab-4d.private.4d.fr/4d/qmobile/ios/QMobileAPI.git" , .revision("HEAD")),
-        .package(url: "https://gitlab-4d.private.4d.fr/4d/qmobile/ios/QMobileDataStore.git" , .revision("HEAD")),
-        .package(url: "https://gitlab-4d.private.4d.fr/4d/qmobile/ios/QMobileDataSync.git" , .revision("HEAD")),
+        .package(url: "https://github.com/4d/ios-QMobileAPI.git" , .revision("HEAD")),
+        .package(url: "https://github.com/4d/ios-QMobileDataStore.git" , .revision("HEAD")),
+        .package(url: "https://github.com/4d/ios-QMobileDataSync.git" , .revision("HEAD")),
         .package(url: "https://github.com/drmohundro/SWXMLHash.git", .revision("5.0.1")),
         .package(url: "https://github.com/phimage/MomXML.git", .revision("HEAD")),
         .package(url: "https://github.com/phimage/Prephirences.git", from: "5.3.0"),
