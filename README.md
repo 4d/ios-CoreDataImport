@@ -30,8 +30,8 @@ And some others frameworks
 |-|-|-|
 | [Prephirences](https://github.com/phimage/Prephirences) | [MIT](https://github.com/phimage/Prephirences/blob/master/LICENSE) | Application settings |
 | [MomXML](https://github.com/phimage/MomXML) | [MIT](https://github.com/phimage/MomXML/blob/master/LICENSE) | Play with core data model |
-| [XCGLogger](https://github.com/DaveWoodCom/XCGLogger) | [MIT](https://github.com/DaveWoodCom/XCGLogger/blob/master/LICENSE) | Log |
-| [Commandant](https://github.com/phimage/CallbackURLKit ) | [MIT](https://github.com/phimage/CallbackURLKit/blob/master/LICENSE) | command line argument parser |
+| [XCGLogger](https://github.com/DaveWoodCom/XCGLogger) | [MIT](https://github.com/DaveWoodCom/XCGLogger/blob/master/LICENSE.txt) | Log |
+| [Commandant](https://github.com/Carthage/Commandant ) | [MIT](https://github.com/Carthage/Commandant/blob/master/LICENSE.md) | command line argument parser |
 
 ## Build
 
